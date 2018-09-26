@@ -1,0 +1,16 @@
+{
+    "dir": "ltr",
+    "lang": "fi",
+    "name": "rainy sound music sound",
+    "scope": "/dallago/",
+    "display": "fullscreen",
+    "start_url": "https://dudb.github.io/dallago/",
+    "short_name": "rsms",
+    "theme_color": "transparent",
+    "description": "i like rain",
+    "orientation": "any",
+    "background_color": "transparent",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "icons": []
+}
