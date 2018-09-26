@@ -146,7 +146,7 @@ var player;
         // WebAudioAPISound Constructor
 
         var WebAudioAPISound = function (url) {
-            this.url = url + '.m4a';
+            this.url = url + '.mp3';
             window.webAudioAPISoundManager = window.webAudioAPISoundManager || new WebAudioAPISoundManager(window.audioContext);
             this.manager = window.webAudioAPISoundManager;
             this.manager.addSound(this.url);
