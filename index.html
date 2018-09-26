@@ -55,56 +55,166 @@ var player;
   
 </head>
 <body>
-<h1>hello</h1>
-    <h1>소녀</h1>
 
-  <div id="player"></div>  
+    <header>
+        <h1>Web Audio API - mp3 loader stand-alone demo</h1>
+        <p><a href="http://websemantics.uk/articles/web-audio-api/">The full Web Audio API article</a></p>
+        <p>All required files are annotated and self-contained within this page (apart from the audio samples).</p>
+    </header>
+
+    <div class=content>
+       
+
+        <button onclick="saxyFrenchSound.play({loop : true, volume : 1.0});">Play saxy french loop</button>
+        <button onclick="saxyFrenchSound.stop();">Stop saxy french loop</button>
+
+        
+
+    </div>
+  
+    <h1>소녀</h1>
+  <div class="player">
+           <iframe width="560" height="315" src="https://www.youtube.com/embed/5twaDXnBnmg?rel=0&amp;showinfo=0amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> 
+        </div>
   
 
-<h1>AudioBuffer example</h1>
-    <button>Make white noise</button>
-    <pre></pre> 
-<script>
-var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-var button = document.querySelector('button');
-var pre = document.querySelector('pre');
-var myScript = document.querySelector('script');
+    <script>
 
-pre.innerHTML = myScript.innerHTML;
+        try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            window.audioContext = new window.AudioContext();
+        } catch (e) {
+            console.log("No Web Audio API support");
+        }
 
-// Stereo
-var channels = 2;
-// Create an empty two second stereo buffer at the
-// sample rate of the AudioContext
-var frameCount = audioCtx.sampleRate * 2.0;
+        // WebAudioAPISoundManager Constructor
 
-var myArrayBuffer = audioCtx.createBuffer(channels, frameCount, audioCtx.sampleRate);
+        var WebAudioAPISoundManager = function (context) {
+            this.context = context;
+            this.bufferList = {};
+            this.playingSounds = {};
+        };
 
-button.onclick = function() {
-  // Fill the buffer with white noise;
-  //just random values between -1.0 and 1.0
-  for (var channel = 0; channel < channels; channel++) {
-   // This gives us the actual array that contains the data
-   var nowBuffering = myArrayBuffer.getChannelData(channel);
-   for (var i = 0; i < frameCount; i++) {
-     // Math.random() is in [0; 1.0]
-     // audio needs to be in [-1.0; 1.0]
-     nowBuffering[i] = Math.random() * 2 - 1;
-   }
-  }
 
-  // Get an AudioBufferSourceNode.
-  // This is the AudioNode to use when we want to play an AudioBuffer
-  var source = audioCtx.createBufferSource();
-  // set the buffer in the AudioBufferSourceNode
-  source.buffer = myArrayBuffer;
-  // connect the AudioBufferSourceNode to the
-  // destination so we can hear the sound
-  source.connect(audioCtx.destination);
-  // start the source playing
-  source.start();
-}
-  </script>
+        // WebAudioAPISoundManager Prototype
+
+        WebAudioAPISoundManager.prototype = {
+
+            addSound: function (url) {
+
+                // Load buffer asynchronously
+                var request = new XMLHttpRequest();
+                request.open("GET", url, true);
+                request.responseType = "arraybuffer";
+
+                var self = this;
+
+                request.onload = function () {
+
+                    // Asynchronously decode the audio file data in request.response
+                    self.context.decodeAudioData(
+                        request.response,
+
+                        function (buffer) {
+                            if (!buffer) {
+                                alert('error decoding file data: ' + url);
+                                return;
+                            }
+                            self.bufferList[url] = buffer;
+                        });
+                };
+
+                request.onerror = function () {
+                    console.log('BufferLoader: XHR error');
+                };
+
+                request.send();
+            },
+
+            stopSoundWithUrl: function (url) {
+                if (this.playingSounds.hasOwnProperty(url)) {
+                    for (var i in this.playingSounds[url]) {
+                        if (this.playingSounds[url].hasOwnProperty(i)) {
+                            this.playingSounds[url][i].stop();
+                        }
+                    }
+                }
+            }
+        };
+
+
+        // WebAudioAPISound Constructor
+
+        var WebAudioAPISound = function (url) {
+            this.url = url + '.m4a';
+            window.webAudioAPISoundManager = window.webAudioAPISoundManager || new WebAudioAPISoundManager(window.audioContext);
+            this.manager = window.webAudioAPISoundManager;
+            this.manager.addSound(this.url);
+        };
+
+
+        // WebAudioAPISound Prototype
+
+        WebAudioAPISound.prototype = {
+
+            play: function (options) {
+                var buffer = this.manager.bufferList[this.url];
+
+                this.settings = {
+                    loop: false,
+                    volume: 0.5
+                };
+
+                for (var i in options) {
+                    if (options.hasOwnProperty(i)) {
+                        this.settings[i] = options[i];
+                    }
+                }
+
+                //Only play if it's loaded yet
+                if (typeof buffer !== "undefined") {
+                    var source = this.makeSource(buffer);
+                    source.loop = this.settings.loop;
+                    source.start(0);
+
+                    if (!this.manager.playingSounds.hasOwnProperty(this.url)) {
+                        this.manager.playingSounds[this.url] = [];
+                    }
+                    this.manager.playingSounds[this.url].push(source);
+                }
+            },
+
+            stop: function () {
+                this.manager.stopSoundWithUrl(this.url);
+            },
+
+            makeSource: function (buffer) {
+                var source = this.manager.context.createBufferSource();
+                var gainNode = this.manager.context.createGain();
+                gainNode.gain.value = this.settings.volume;
+                source.buffer = buffer;
+                source.connect(gainNode);
+                gainNode.connect(this.manager.context.destination);
+                return source;
+            }
+
+        };
+        /*
+        // 682 bytes gzipped (1.67KB uncompressed)
+        try{window.AudioContext=window.AudioContext||window.webkitAudioContext,window.audioContext=new window.AudioContext}catch(a){console.log("No Web Audio API support")}var WebAudioAPISoundManager=function(a){this.context=a;this.bufferList={};this.playingSounds={}};WebAudioAPISoundManager.prototype={addSound:function(a){var b=new XMLHttpRequest;b.open("GET",a,!0);b.responseType="arraybuffer";var c=this;b.onload=function(){c.context.decodeAudioData(b.response,function(b){b?c.bufferList[a]=b:alert("error decoding file data: "+a)})};b.onerror=function(){console.log("BufferLoader: XHR error")};b.send()},stopSoundWithUrl:function(a){if(this.playingSounds.hasOwnProperty(a))for(var b in this.playingSounds[a])this.playingSounds[a].hasOwnProperty(b)&&this.playingSounds[a][b].stop()}};var WebAudioAPISound=function(a){this.url=a+".mp3";window.webAudioAPISoundManager=window.webAudioAPISoundManager||new WebAudioAPISoundManager(window.audioContext);this.manager=window.webAudioAPISoundManager;this.manager.addSound(this.url)};WebAudioAPISound.prototype={play:function(a){var b=this.manager.bufferList[this.url];this.settings={loop:!1,volume:.5};for(var c in a)a.hasOwnProperty(c)&&(this.settings[c]=a[c]);"undefined"!==typeof b&&(a=this.makeSource(b),a.loop=this.settings.loop,a.start(0),this.manager.playingSounds.hasOwnProperty(this.url)||(this.manager.playingSounds[this.url]=[]),this.manager.playingSounds[this.url].push(a))},stop:function(){this.manager.stopSoundWithUrl(this.url)},makeSource:function(a){var b=this.manager.context.createBufferSource(),c=this.manager.context.createGain();c.gain.value=this.settings.volume;b.buffer=a;b.connect(c);c.connect(this.manager.context.destination);return b}};
+        */
+
+        //var typingSound = new WebAudioAPISound("/audio/typing");
+        //var pagefeedSound = new WebAudioAPISound("/audio/pagefeed");
+
+        var saxyFrenchSound = new WebAudioAPISound("/dallago/0");
+        //var greaseMonkeySound = new WebAudioAPISound("grease_monkey");
+
+// saxyFrenchSound.play({loop : true, volume : 0.8});
+// pagefeedSound.play();
+// typingSound.play({volume : 0.2});
+    </script>
+
 
 </body>
 </html>
