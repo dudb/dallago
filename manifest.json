@@ -2,6 +2,13 @@
     "dir": "ltr",
     "lang": "fi",
     "name": "rainy sound music sound",
+     "icons": [
+        {
+          "src": "img/android-icon-144x144",
+          "sizes": "144x144 64x64 32x32 24x24 16x16",
+          "type": "image/png"
+        }
+      ],
     "scope": "/dallago/",
     "display": "fullscreen",
     "start_url": "https://dudb.github.io/dallago/",
