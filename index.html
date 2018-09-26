@@ -16,6 +16,11 @@
 <script src="pwabuilder-sw-register.js"></script>
   
   <script>
+    
+    var plist  = ["KF1FDZPthYI","lZRSry1KH2M","92nsZ2TDwIk","4OyIjsA2IlM","VGBtuIOXvww","kZOrGN0Xm-s","lN_GJnQP03Y","mezYFe9DLRk"]
+    var total = plist.length;
+    var incNum = 0;
+    
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 var ScriptTag = document.getElementsByTagName('script')[0];
@@ -47,7 +52,10 @@ var player;
       }       
       function onPlayerStateChange(event) {   
         if (event.data == YT.PlayerState.ENDED) {   
-           player.loadVideoById ('KF1FDZPthYI');
+          if(incNum < total) {
+           player.loadVideoById (plist[incNum]);
+            incNum = incNum++;
+          }
         }       
       }
 
@@ -73,9 +81,10 @@ var player;
     </div>
   
     <h1>소녀</h1>
-  <div class="player">
+    <div id="player"></div>
+  <!--<div class="player">
            <iframe width="560" height="315" src="https://www.youtube.com/embed/5twaDXnBnmg?rel=0&amp;showinfo=0amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> 
-        </div>
+        </div>-->
   
 
     <script>
