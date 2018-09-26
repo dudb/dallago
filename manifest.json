@@ -4,7 +4,7 @@
     "name": "rainy sound music sound",
      "icons": [
         {
-          "src": "img/android-icon-144x144",
+          "src": "img/android-icon-144x144.png",
           "sizes": "144x144 64x64 32x32 24x24 16x16",
           "type": "image/png"
         }
