@@ -54,7 +54,7 @@ var player;
         if (event.data == YT.PlayerState.ENDED) {   
           if(incNum < total) {
            player.loadVideoById (plist[incNum]);
-            incNum = incNum++;
+            incNum = incNum+1;
           }
         }       
       }
