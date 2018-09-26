@@ -1,12 +1,27 @@
 {
     "dir": "ltr",
     "lang": "fi",
-    "name": "rainy sound music sound",
-     "icons": [
+    "name": "rainy sound music sound", 
+    "icons": [
         {
-          "src": "img/android-icon-144x144.png", 
-          "sizes": "144x144 64x64 32x32 24x24 16x16",
-          "type": "image/png"
+          "src": "launcher-icon-1x.png",
+          "type": "image/png",
+          "sizes": "48x48"
+        },
+        {
+          "src": "launcher-icon-2x.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+            {
+          "src": "launcher-icon-3x.png",
+          "type": "image/png",
+          "sizes": "144x144"
+        },
+        {
+          "src": "launcher-icon-4x.png",
+          "type": "image/png",
+          "sizes": "192x192"
         }
       ],
     "scope": "/dallago/",
