@@ -146,7 +146,7 @@ var player;
         // WebAudioAPISound Constructor
 
         var WebAudioAPISound = function (url) {
-            this.url = url + '.mp3';
+            this.url = url;// + '.ogg';
             window.webAudioAPISoundManager = window.webAudioAPISoundManager || new WebAudioAPISoundManager(window.audioContext);
             this.manager = window.webAudioAPISoundManager;
             this.manager.addSound(this.url);
@@ -207,7 +207,7 @@ var player;
         //var typingSound = new WebAudioAPISound("/audio/typing");
         //var pagefeedSound = new WebAudioAPISound("/audio/pagefeed");
 
-        var saxyFrenchSound = new WebAudioAPISound("/dallago/0");
+        var saxyFrenchSound = new WebAudioAPISound("/dallago/hsum2Pa.ogg");
         //var greaseMonkeySound = new WebAudioAPISound("grease_monkey");
 
 // saxyFrenchSound.play({loop : true, volume : 0.8});
