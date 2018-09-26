@@ -4,11 +4,52 @@
   <link rel="manifest" href="manifest.json">
 <script src="manup.js"></script>
 <script src="pwabuilder-sw-register.js"></script>
+  
+  <script>
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var ScriptTag = document.getElementsByTagName('script')[0];
+ScriptTag.parentNode.insertBefore(tag, ScriptTag);
+
+var player; 
+      function onYouTubeIframeAPIReady() {                      
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId : '5twaDXnBnmg',       
+          playerVars: {
+                    autoplay: 1,
+                    //loop: 1,
+                    //controls: 0,
+                    //showinfo: 0,
+                    //autohide: 1,
+                    //modestbranding: 1,
+                    //vq: 'hd1080'
+                    },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }      
+        });
+      }        
+       function onPlayerReady(event) {                                        
+       event.target.playVideo();
+      }       
+      function onPlayerStateChange(event) {   
+        if (event.data == YT.PlayerState.ENDED) {   
+           player.loadVideoById ('KF1FDZPthYI');
+        }       
+      }
+
+</script>
+  
 </head>
 <body>
 <h1>hello</h1>
     <h1>소녀</h1>
 
+  <div id="player"></div>  
+  
   <div class="player">
             <iframe width="560" height="315" src="https://www.youtube.com/embed/5twaDXnBnmg?rel=0&amp;showinfo=0amp;autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
