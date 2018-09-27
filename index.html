@@ -29,8 +29,8 @@ ScriptTag.parentNode.insertBefore(tag, ScriptTag);
 var player; 
       function onYouTubeIframeAPIReady() {                      
         player = new YT.Player('player', {
-          height: '390',
-          width: '640',
+          height: '160',
+          width: '320',
           videoId : '5twaDXnBnmg',       
           playerVars: {
                     autoplay: 1,
@@ -39,7 +39,14 @@ var player;
                     //showinfo: 0,
                     //autohide: 1,
                     //modestbranding: 1,
+                    vq=small,
                     //vq: 'hd1080'
+                  //  240p          vq=small     flv
+                  //  240p or 360p  vq=medium    mp4
+                  //  240p or 360p  vq=medium    flv
+                  //  480p          vq=large     flv
+                  //  720p          vq=hd720     mp4
+                  // 1080p          vq=hd1080    mp4
                     },
           events: {
             'onReady': onPlayerReady,
